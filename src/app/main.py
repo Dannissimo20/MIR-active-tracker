@@ -5,4 +5,4 @@ app = FastAPI()
 
 @app.get("/")
 def healthcheck():
-    return 205
+    return 200
