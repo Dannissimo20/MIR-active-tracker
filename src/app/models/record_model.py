@@ -8,12 +8,11 @@ class RecordModel(Base):
     __tablename__ = "record"
 
     id = Column(
-        String(16),
-        primary_key=True,
-        default=lambda: binascii.hexlify(os.urandom(8)).decode()
+        UUID,
+        primary_key=True
     )
-    title = Column(String)
-    player = Column(String, nullable=False)
+    title = Column(String(255), nullable=False)
+    player = Column(String(255), nullable=False)
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime)
     result = Column(String)

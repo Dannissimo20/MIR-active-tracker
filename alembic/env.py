@@ -1,9 +1,12 @@
 from logging.config import fileConfig
+import os
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+
+from dotenv import load_dotenv
 
 from src.app.database.database import Base
 
@@ -15,6 +18,9 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+load_dotenv()
+url = os.environ.get("PG_DSN")
 
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -40,7 +46,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    #url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -63,6 +69,7 @@ def run_migrations_online() -> None:
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        url=url
     )
 
     with connectable.connect() as connection:
