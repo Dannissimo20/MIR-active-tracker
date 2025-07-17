@@ -1,15 +1,15 @@
-from app.database.database import Base
-import binascii
-import os
-from sqlalchemy import UUID, Boolean, Column, DateTime, String, func
+import uuid
+from src.app.database.database import Base
+from sqlalchemy import UUID, Column, DateTime, String, func
 
 
 class RecordModel(Base):
     __tablename__ = "record"
 
     id = Column(
-        UUID,
-        primary_key=True
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4
     )
     title = Column(String(255), nullable=False)
     player = Column(String(255), nullable=False)
