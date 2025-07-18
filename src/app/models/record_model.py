@@ -1,6 +1,6 @@
 import uuid
 from src.app.database.database import Base
-from sqlalchemy import UUID, Column, DateTime, String, func
+from sqlalchemy import UUID, Column, DateTime, String, Boolean,  func
 
 
 class RecordModel(Base):
@@ -16,6 +16,7 @@ class RecordModel(Base):
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime)
     result = Column(String)
+    iscancel = Column(Boolean, default=False)
     createdat = Column(DateTime, server_default=func.now())
     updatedat = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
