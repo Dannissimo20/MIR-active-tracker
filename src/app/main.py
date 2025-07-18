@@ -1,8 +1,10 @@
 from fastapi import FastAPI
+from src.app.api.records import record_router
 
-app = FastAPI()
+app: FastAPI = FastAPI()
 
+app.include_router(record_router)
 
 @app.get("/")
 def healthcheck():
-    return 200
+    return {"status": "ok", "message": "Service is running"}
