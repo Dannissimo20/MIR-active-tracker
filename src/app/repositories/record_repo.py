@@ -29,4 +29,4 @@ class RecordRepo(BaseRepository[RecordIn, RecordUpdate, RecordOut, RecordModel])
         with self.db.session() as session:
             session.execute(query)
             session.commit()
-            return self.get_records()
+            return self.get_all()
