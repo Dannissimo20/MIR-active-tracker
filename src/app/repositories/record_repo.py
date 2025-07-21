@@ -3,7 +3,7 @@ import uuid
 from src.app.repositories.base import BaseRepository
 from src.app.schemas.record_schema import RecordIn, RecordOut, RecordUpdate
 from src.app.models.record_model import RecordModel
-from sqlalchemy import select, insert, update
+from sqlalchemy import select, update
 
 
 class RecordRepo(BaseRepository[RecordIn, RecordUpdate, RecordOut, RecordModel]):
