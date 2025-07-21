@@ -3,14 +3,17 @@ from typing import Optional
 from pydantic import BaseModel, UUID4, Field
 
 
-class RecordIn(BaseModel):
+class BaseSchema(BaseModel):
+    class Config:
+        extra = 'ignore'
+        from_attributes = True
+
+
+class RecordIn(BaseSchema):
     title: str = Field(max_length=255)
     player: str = Field(max_length=255)
     start_time: datetime = Field(datetime.now())
     end_time: Optional[datetime] = None
-
-    class Config:
-        extra = 'ignore'
 
 
 class RecordOut(RecordIn):
@@ -20,16 +23,9 @@ class RecordOut(RecordIn):
     createdat: datetime
     updatedat: datetime
 
-    class Config:
-        from_attributes = True
 
-
-class RecordUpdate(BaseModel):
+class RecordUpdate(BaseSchema):
     title: Optional[str] = None
     player: Optional[str] = None
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-        extra = 'ignore'

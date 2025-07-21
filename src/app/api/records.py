@@ -18,7 +18,7 @@ record_router = APIRouter(
 
 @record_router.get("/all_records", response_model=list[RecordOut])
 def get_all(record_repo: RecordRepo = Depends(get_record_repo)):
-    return record_repo.get_records()
+    return record_repo.get_all()
 
 
 @record_router.get("/all_active_records", response_model=list[RecordOut])
@@ -28,18 +28,18 @@ def get_all_active(record_repo: RecordRepo = Depends(get_record_repo)):
 
 @record_router.get("/record", response_model=RecordOut)
 def get_record_by_id(id: UUID4, record_repo: RecordRepo = Depends(get_record_repo)):
-    return record_repo.get_record_by_id(id)
+    return record_repo.get_by_id(id)
 
 
 @record_router.post("/record", response_model=list[RecordOut])
 def create_record(request: RecordIn, record_repo: RecordRepo = Depends(get_record_repo)):
-    result = record_repo.add_record(request)
+    result = record_repo.create(request)
     return result
 
 
 @record_router.patch("/record", response_model=list[RecordOut])
 def update_record(id: UUID4, request: RecordUpdate, record_repo: RecordRepo = Depends(get_record_repo)):
-    result = record_repo.update_record(id, request)
+    result = record_repo.update(id, request)
     return result
 
 
