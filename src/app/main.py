@@ -8,6 +8,7 @@ app.container = container
 
 app.include_router(record_router)
 
+
 @app.get("/")
 def healthcheck():
     return {"status": "ok", "message": "Service is running"}

@@ -19,4 +19,3 @@ class RecordModel(Base):
     iscancel = Column(Boolean, default=False)
     createdat = Column(DateTime, server_default=func.now())
     updatedat = Column(DateTime, server_default=func.now(), onupdate=func.now())
-

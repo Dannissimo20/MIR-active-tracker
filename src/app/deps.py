@@ -5,6 +5,7 @@ from src.app.services.record_service import RecordService
 from src.app.database.database import DBWriter
 from src.app.repositories.record_repo import RecordRepo
 
+
 class Container(DeclarativeContainer):
     wiring_config = WiringConfiguration(
         modules=[

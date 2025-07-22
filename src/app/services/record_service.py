@@ -15,4 +15,3 @@ class RecordService:
             raise RecordUpdateError()
         result: list[RecordOut] = self.record_repo.update(id, request)
         return result
-    
