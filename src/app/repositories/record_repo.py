@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Type
 import uuid
 from src.app.repositories.base import BaseRepository
-from src.app.schemas.record_schema import RecordIn, RecordOut, RecordUpdate
+from src.app.schemas.record_schema import RecordIn, RecordOut, RecordUpdate, RecordFinish
 from src.app.models.record_model import RecordModel
 from sqlalchemy import func, select, update
 
@@ -30,3 +30,11 @@ class RecordRepo(BaseRepository[RecordIn, RecordUpdate, RecordOut, RecordModel])
         with self.db.session() as session:
             result = session.execute(query).scalars().all()
             return [self._schema.model_validate(item) for item in result]
+
+    
+    def finish_record(self, id: uuid, request: RecordFinish) -> list[RecordOut]:
+        query = update(self._table).where(self._table.id == id).values(result=request.result)
+        with self.db.session() as session:
+            session.execute(query)
+            session.commit()
+            return self.get_all()

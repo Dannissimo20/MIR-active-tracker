@@ -4,7 +4,7 @@ from pydantic import UUID4
 from src.app.services.record_service import RecordService
 from src.app.database.database import DBWriter
 from src.app.repositories.record_repo import RecordRepo
-from src.app.schemas.record_schema import RecordIn, RecordOut, RecordUpdate
+from src.app.schemas.record_schema import RecordFinish, RecordIn, RecordOut, RecordUpdate
 from src.app.deps import Container
 
 db_writer: DBWriter = DBWriter()
@@ -50,6 +50,20 @@ def create_record(request: RecordIn, record_repo: RecordRepo = Depends(Provide[C
 @inject
 def update_record(id: UUID4, request: RecordUpdate, record_service: RecordService = Depends(Provide[Container.record_service])):
     result = record_service.update_record(id, request)
+    return result
+
+
+@record_router.patch(
+    "/finish",
+    response_model=list[RecordOut],
+    responses={
+        200: {"description": "Record updated successfully"},
+        409: {"description": "Complete game update error"}
+    }
+)
+@inject
+def finish_record(id: UUID4, request: RecordFinish, record_service: RecordService = Depends(Provide[Container.record_service])):
+    result = record_service.finish_record(id, request)
     return result
 
 

@@ -1,7 +1,7 @@
 import uuid
 from app.utils.errors import RecordUpdateError
 from src.app.repositories.record_repo import RecordRepo
-from src.app.schemas.record_schema import RecordOut, RecordUpdate
+from src.app.schemas.record_schema import RecordFinish, RecordOut, RecordUpdate
 
 
 class RecordService:
@@ -15,3 +15,10 @@ class RecordService:
             raise RecordUpdateError()
         result: list[RecordOut] = self.record_repo.update(id, request)
         return result
+
+
+    def finish_record(self, id: uuid, request: RecordFinish) -> list[RecordOut]:
+        record_for_finish: RecordOut = self.record_repo.get_by_id(id)
+        if record_for_finish.result is not None or record_for_finish.iscancel:
+            raise RecordUpdateError()
+        return self.record_repo.finish_record(id, request)        
