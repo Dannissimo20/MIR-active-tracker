@@ -23,8 +23,8 @@ def get_all(record_repo: RecordRepo = Depends(Provide[Container.record_repo])):
 
 @record_router.get("/all-active-records", response_model=list[RecordOut])
 @inject
-def get_all_active(record_service: RecordService = Depends(Provide[Container.record_service])):
-    return record_service.get_active_records()
+def get_all_active(record_repo: RecordRepo = Depends(Provide[Container.record_repo])):
+    return record_repo.get_active_records()
 
 
 @record_router.get("", response_model=RecordOut)

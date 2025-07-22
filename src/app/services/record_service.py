@@ -1,4 +1,3 @@
-from datetime import datetime
 import uuid
 from app.utils.errors import RecordUpdateError
 from src.app.repositories.record_repo import RecordRepo
@@ -17,16 +16,3 @@ class RecordService:
         result: list[RecordOut] = self.record_repo.update(id, request)
         return result
     
-
-    def get_active_records(self) -> list[RecordOut]:
-        records: list[RecordOut] = self.record_repo.get_all()
-        result: list[RecordOut] = []
-        for item in records:
-            if item.iscancel is False:
-                if item.end_time is not None:
-                    if item.end_time >= datetime.now():
-                        result.append(item)
-                else:
-                    if item.start_time.date() >= datetime.now().date():
-                        result.append(item)
-        return result
