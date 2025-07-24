@@ -21,7 +21,7 @@ class DBWriter:
 
 
 @contextmanager
-def get_session(maker: sessionmaker[Session]) -> ContextManager[Session]:
+def get_session(maker: sessionmaker[Session]) -> ContextManager[Session]: # type: ignore
     with maker.begin() as session:
         try:
             yield session

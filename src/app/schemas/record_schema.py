@@ -29,3 +29,7 @@ class RecordUpdate(BaseSchema):
     player: Optional[str] = None
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
+
+
+class RecordFinish(BaseSchema):
+    result: str
