@@ -27,7 +27,7 @@ def get_all_active(record_repo: RecordRepo = Depends(Provide[Container.record_re
     return record_repo.get_active_records()
 
 
-@record_router.get("", response_model=RecordOut)
+@record_router.get("", response_model=RecordOut|None)
 @inject
 def get_record_by_id(id: UUID4, record_repo: RecordRepo = Depends(Provide[Container.record_repo])):
     return record_repo.get_by_id(id)

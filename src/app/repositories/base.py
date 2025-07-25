@@ -33,10 +33,12 @@ class BaseRepository(Generic[IN_SCHEMA, UPDATE_SCHEMA, SCHEMA, TABLE], metaclass
             return [self._schema.model_validate(item) for item in result]
 
 
-    def get_by_id(self, id: uuid) -> SCHEMA:
+    def get_by_id(self, id: uuid) -> SCHEMA | None:
         query = select(self._table).where(self._table.id == id)
         with self.db.session() as session:
             result = session.execute(query).scalars().first()
+            if result is None:
+                return None
             return self._schema.model_validate(result)
 
 

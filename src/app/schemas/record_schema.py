@@ -1,12 +1,10 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, UUID4, Field
+from pydantic import BaseModel, UUID4, Field, ConfigDict
 
 
 class BaseSchema(BaseModel):
-    class Config:
-        extra = 'ignore'
-        from_attributes = True
+    model_config = ConfigDict(from_attributes = True, extra ='ignore')
 
 
 class RecordIn(BaseSchema):
