@@ -23,8 +23,8 @@ class RecordOut(RecordIn):
 
 
 class RecordUpdate(BaseSchema):
-    title: Optional[str] = None
-    player: Optional[str] = None
+    title: Optional[str] = Field(max_length=255, default=None)
+    player: Optional[str] = Field(max_length=255, default=None)
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
 
