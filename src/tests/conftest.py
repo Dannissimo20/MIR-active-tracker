@@ -2,6 +2,7 @@ from datetime import datetime
 from unittest.mock import MagicMock
 import uuid
 from pytest import fixture
+from app.repositories.record_repo import RecordRepo
 
 
 @fixture
@@ -14,7 +15,7 @@ def fake_records():
             player = "Я",
             start_time = datetime.now(),
             end_time = datetime.now(),
-            result = "Я выиграл",
+            result = None,
             iscancel = False,
             createdat = datetime.now(),
             updatedat = datetime.now()
@@ -25,7 +26,7 @@ def fake_records():
             player = "Я, Он",
             start_time = datetime.now(),
             end_time = None,
-            result = None,
+            result = "Я выйграл",
             iscancel = False,
             createdat = datetime.now(),
             updatedat = datetime.now()
@@ -44,4 +45,10 @@ def mock_db_writer(mocker):
 def mock_session(mocker, mock_db_writer):
     mock = mocker.MagicMock()
     mock_db_writer.session.return_value.__enter__.return_value = mock
+    return mock
+
+
+@fixture
+def mock_record_repo(mocker):
+    mock = mocker.MagicMock(spec=RecordRepo)
     return mock
