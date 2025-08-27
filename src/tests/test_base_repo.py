@@ -1,6 +1,7 @@
 from datetime import datetime
 from unittest.mock import MagicMock
 import uuid
+from pytest import mark, param
 from src.app.models.record_model import RecordModel
 from src.app.repositories.base import BaseRepository
 from src.app.schemas.record_schema import RecordOut
@@ -15,8 +16,11 @@ class TestRepository(BaseRepository):
     def _schema(self):
         return RecordOut
 
-
-def test_get_all_empty(mock_session, mock_db_writer):
+@mark.parametrize(
+    ("dummy_param"),
+    [param(None, id = "Получение всех записей при пустой бд")],
+)
+def test_get_all_empty(mock_session, mock_db_writer, dummy_param):
     mock_session.execute.return_value.scalars.return_value.all.return_value = []
 
     repo = TestRepository(mock_db_writer)
@@ -25,7 +29,11 @@ def test_get_all_empty(mock_session, mock_db_writer):
     assert len(records) == 0
 
 
-def test_get_all(mock_session, mock_db_writer, fake_records):
+@mark.parametrize(
+    ("dummy_param"),
+    [param(None, id = "Получение всех записей")],
+)
+def test_get_all(mock_session, mock_db_writer, fake_records, dummy_param):
     mock_session.execute.return_value.scalars.return_value.all.return_value = fake_records
 
     repo = TestRepository(mock_db_writer)
@@ -36,8 +44,11 @@ def test_get_all(mock_session, mock_db_writer, fake_records):
     assert records[1].title == "НГ+"
 
 
-def test_get_by_id_with_correct_id(mock_db_writer, mock_session, fake_records):
-    record_id = uuid.UUID("16fd2706-8baf-433b-82eb-8c7fada847da")
+@mark.parametrize(
+    ("record_id"),
+    [param(uuid.UUID("16fd2706-8baf-433b-82eb-8c7fada847da"), id = "Получение записи с существующим id")],
+)
+def test_get_by_id_with_correct_id(mock_db_writer, mock_session, fake_records, record_id):
     mock_session.execute.return_value.scalars.return_value.first.return_value = fake_records[0]
 
     repo = TestRepository(mock_db_writer)
@@ -47,8 +58,11 @@ def test_get_by_id_with_correct_id(mock_db_writer, mock_session, fake_records):
     assert records.title == "Новая игра"
 
 
-def test_get_by_id_with_incorrect_id(mock_db_writer, mock_session):
-    record_id = uuid.UUID("26fd2706-8baf-433b-82eb-8c7fada847da")
+@mark.parametrize(
+    ("record_id"),
+    [param(uuid.UUID("26fd2706-8baf-433b-82eb-8c7fada847da"), id = "Получение записи с существующим id")],
+)
+def test_get_by_id_with_incorrect_id(mock_db_writer, mock_session, record_id):
     mock_session.execute.return_value.scalars.return_value.first.return_value = None
 
     repo = TestRepository(mock_db_writer)
@@ -56,13 +70,16 @@ def test_get_by_id_with_incorrect_id(mock_db_writer, mock_session):
 
     assert records is None
 
-
-def test_create(mock_session, mock_db_writer, fake_records):
-    id = uuid.uuid4()
+@mark.parametrize(
+    ("record_id"),
+    [param(uuid.uuid4(), id = "Создание записи")],
+)
+def test_create(mock_session, mock_db_writer, fake_records, record_id):
+    record_id = uuid.uuid4()
     mock_session.execute.return_value.scalars.return_value.all.return_value = [
         *fake_records,
         MagicMock(
-            id = id,
+            id = record_id,
             title = "Новая игра ++",
             player = "Я, Он",
             start_time = datetime.now(),
@@ -93,8 +110,11 @@ def test_create(mock_session, mock_db_writer, fake_records):
     assert records[2].title == "Новая игра ++"
 
 
-def test_update(mock_db_writer, mock_session, fake_records):
-    fake_id = uuid.UUID("16fd2706-8baf-433b-82eb-8c7fada847da")
+@mark.parametrize(
+    ("record_id"),
+    [param(uuid.UUID("16fd2706-8baf-433b-82eb-8c7fada847da"), id = "Обновление записи")],
+)
+def test_update(mock_db_writer, mock_session, fake_records, record_id):
     fake_records[0].title = "АБСОЛЮТНО НОВАЯ ИГРА"
     mock_session.execute.return_value.scalars.return_value.all.return_value = fake_records
 
@@ -106,7 +126,7 @@ def test_update(mock_db_writer, mock_session, fake_records):
     mock_request.model_dump.return_value = fake_update
 
     repo = TestRepository(mock_db_writer)
-    records = repo.update(fake_id, mock_request)
+    records = repo.update(record_id, mock_request)
 
     assert mock_session.execute.call_count == 2
     assert len(records) == 2
