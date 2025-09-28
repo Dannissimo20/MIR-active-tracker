@@ -1,11 +1,15 @@
 from datetime import datetime
 import uuid
 from pydantic import UUID4, ValidationError
-from pytest import mark, raises
+from pytest import mark, param, raises
 from src.app.schemas.record_schema import BaseSchema, RecordIn, RecordOut, RecordUpdate
 
 
-def test_base_schema_config():
+@mark.parametrize(
+    ('dummy_param'),
+    [param(None, id="Проверка параметров базовой схемы")]
+)
+def test_base_schema_config(dummy_param):
     result = BaseSchema()
 
     assert result.model_config['from_attributes'] is True
