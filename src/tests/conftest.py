@@ -1,54 +1,43 @@
 from datetime import datetime
-from unittest.mock import MagicMock
 import uuid
-from pytest import fixture
-from app.repositories.record_repo import RecordRepo
+import pytest
 
+from src.app.database.database import Base, DBWriter
+from src.app.models.record_model import RecordModel
+from src.app.repositories.base import BaseRepository
+from src.app.schemas.record_schema import RecordOut
+from src.tests.test_base_repo import TestRepository
 
-@fixture
-def fake_records():
-    record_id = uuid.UUID("16fd2706-8baf-433b-82eb-8c7fada847da")
-    return [
-        MagicMock(
+@pytest.fixture
+def db_with_data():
+    db: DBWriter = DBWriter('sqlite:///:memory:')
+    Base.metadata.create_all(db.engine)
+
+    with db.session() as session:
+        record_id = uuid.UUID("16fd2706-8baf-433b-82eb-8c7fada847da")
+        record = RecordModel(
             id = record_id,
             title = "Новая игра",
             player = "Я",
             start_time = datetime.now(),
             end_time = datetime.now(),
-            result = None,
+            result = "Я выиграл",
             iscancel = False,
             createdat = datetime.now(),
             updatedat = datetime.now()
-        ),
-        MagicMock(
+        )
+        session.add(record)
+        record = RecordModel(
             id = uuid.uuid4(),
             title = "НГ+",
             player = "Я, Он",
             start_time = datetime.now(),
             end_time = None,
-            result = "Я выйграл",
+            result = None,
             iscancel = False,
             createdat = datetime.now(),
             updatedat = datetime.now()
         )
-    ]
-
-
-@fixture
-def mock_db_writer(mocker):
-    mock = mocker.MagicMock()
-    mock.patch("app.repositories.base.DBWriter", return_value=mock)
-    return mock
-
-
-@fixture
-def mock_session(mocker, mock_db_writer):
-    mock = mocker.MagicMock()
-    mock_db_writer.session.return_value.__enter__.return_value = mock
-    return mock
-
-
-@fixture
-def mock_record_repo(mocker):
-    mock = mocker.MagicMock(spec=RecordRepo)
-    return mock
+        session.add(record)
+        session.flush()
+    yield db
