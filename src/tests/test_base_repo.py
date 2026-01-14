@@ -1,8 +1,7 @@
 from datetime import datetime
 from unittest.mock import MagicMock
 import uuid
-from pytest import fixture
-
+from pytest import mark, param
 from src.app.models.record_model import RecordModel
 from src.app.repositories.base import BaseRepository
 from src.app.schemas.record_schema import RecordIn, RecordOut, RecordUpdate
